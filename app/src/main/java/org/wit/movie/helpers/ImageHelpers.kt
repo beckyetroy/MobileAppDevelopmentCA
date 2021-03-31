@@ -1,4 +1,4 @@
-package org.wit.placemark.helpers
+package org.wit.movie.helpers
 
 import android.app.Activity
 import android.content.Context
@@ -7,7 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
-import org.wit.placemark.R
+import org.wit.movie.R
 import java.io.IOException
 
 fun showImagePicker(parent: Activity, id: Int) {
@@ -15,7 +15,7 @@ fun showImagePicker(parent: Activity, id: Int) {
     intent.type = "image/*"
     intent.action = Intent.ACTION_OPEN_DOCUMENT
     intent.addCategory(Intent.CATEGORY_OPENABLE)
-    val chooser = Intent.createChooser(intent, R.string.select_placemark_image.toString())
+    val chooser = Intent.createChooser(intent, R.string.select_movie_image.toString())
     parent.startActivityForResult(chooser, id)
 }
 

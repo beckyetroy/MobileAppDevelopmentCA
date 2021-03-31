@@ -1,4 +1,4 @@
-package org.wit.placemark.helpers
+package org.wit.movie.helpers
 
 import android.content.Context
 import android.util.Log
@@ -32,9 +32,9 @@ fun read(context: Context, fileName: String): String {
             str = partialStr.toString()
         }
     } catch (e: FileNotFoundException) {
-        Log.e("Error: ", "file not found: " + e.toString());
+        Log.e("Error: ", "File not found: " + e.toString());
     } catch (e: IOException) {
-        Log.e("Error: ", "cannot read file: " + e.toString());
+        Log.e("Error: ", "Cannot read file: " + e.toString());
     }
     return str
 }

@@ -1,4 +1,4 @@
-package org.wit.placemark.activities
+package org.wit.movie.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,12 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_movie_list.*
 import org.jetbrains.anko.intentFor
-import org.wit.placemark.R
-import org.wit.placemark.main.MainApp
+import org.wit.movie.R
+import org.wit.movie.main.MainApp
 import org.jetbrains.anko.startActivityForResult
-import org.wit.placemark.models.PlacemarkModel
+import org.wit.movie.models.MovieModel
 
-class MovieListActivity : AppCompatActivity(), PlacemarkListener {
+class MovieListActivity : AppCompatActivity(), MovieListener {
 
     lateinit var app: MainApp
 
@@ -23,8 +23,8 @@ class MovieListActivity : AppCompatActivity(), PlacemarkListener {
 
         //layout and populate for display
         val layoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager   //recyclerView is a widget in activity_placemark_list.xml
-        loadPlacemarks()
+        recyclerView.layoutManager = layoutManager
+        loadMovies()
 
         //enable action bar and set title
         toolbar.title = title
@@ -42,21 +42,21 @@ class MovieListActivity : AppCompatActivity(), PlacemarkListener {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onPlacemarkClick(placemark: PlacemarkModel) {
-        startActivityForResult(intentFor<MovieActivity>().putExtra("placemark_edit", placemark), 0)
+    override fun onMovieClick(movie: MovieModel) {
+        startActivityForResult(intentFor<MovieActivity>().putExtra("movie edit", movie), 0)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        loadPlacemarks()
+        loadMovies()
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun loadPlacemarks() {
-        showPlacemarks(app.placemarks.findAll())
+    private fun loadMovies() {
+        showMovies(app.movies.findAll())
     }
 
-    fun showPlacemarks (placemarks: List<PlacemarkModel>) {
-        recyclerView.adapter = PlacemarkAdapter(placemarks, this)
+    fun showMovies (movies: List<MovieModel>) {
+        recyclerView.adapter = MovieAdapter(movies, this)
         recyclerView.adapter?.notifyDataSetChanged()
     }
 }
