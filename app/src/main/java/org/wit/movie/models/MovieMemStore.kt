@@ -27,6 +27,8 @@ class MovieMemStore : MovieStore, AnkoLogger {
         var foundMovie: MovieModel? = movies.find { m -> m.id == movie.id }
         if (foundMovie != null) {
             foundMovie.title = movie.title
+            foundMovie.year = movie.year
+            foundMovie.director = movie.director
             foundMovie.description = movie.description
             foundMovie.image = movie.image
             foundMovie.lat = movie.lat

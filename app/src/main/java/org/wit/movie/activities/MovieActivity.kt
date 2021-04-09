@@ -1,11 +1,15 @@
 package org.wit.movie.activities
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_movie.*
+import kotlinx.android.synthetic.main.activity_movie_list.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
@@ -17,6 +21,7 @@ import org.wit.movie.helpers.showImagePicker
 import org.wit.movie.main.MainApp
 import org.wit.movie.models.Location
 import org.wit.movie.models.MovieModel
+import java.io.IOException
 
 class MovieActivity : AppCompatActivity(), AnkoLogger {
 
@@ -31,37 +36,52 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
         setContentView(R.layout.activity_movie)
         app = application as MainApp
 
-        if (intent.hasExtra("Movie Edit")) {
+        if (intent.hasExtra("movie_edit")) {
             edit = true
-            movie = intent.extras?.getParcelable<MovieModel>("Movie Edit")!!
+            movie = intent.extras?.getParcelable<MovieModel>("movie_edit")!!
             movieTitle.setText(movie.title)
+            movieYear.setText(movie.year.toString())
+            movieDirector.setText(movie.director)
             movieDescription.setText(movie.description)
             movieImage.setImageBitmap(readImageFromPath(this, movie.image))
             if (movie.image != null) {
+                movieImage.setImageBitmap(readImageFromPath(this, movie.image))
                 chooseImage.setText(R.string.change_movie_image)
             }
             btnAdd.setText(R.string.save_movie)
         }
 
         movieLocation.setOnClickListener {
-            val location = Location(52.245696, -7.139102, 15f)
+            val location = Location(28.385233, -81.563873, -20f)
             if (movie.zoom != 0f) {
                 location.lat =  movie.lat
                 location.lng = movie.lng
                 location.zoom = movie.zoom
             }
-            startActivityForResult(intentFor<MapsActivity>().putExtra("Location", location), LOCATION_REQUEST)
+            startActivityForResult(intentFor<GMapsActivity>().putExtra("location", location), LOCATION_REQUEST)
+        }
+
+        infoBtn.setOnClickListener() {
+            toast(R.string.location_info)
         }
 
         btnAdd.setOnClickListener() {
             movie.title = movieTitle.text.toString()
-            movie.year = movieYear.text.toString().toInt()
+            val year = movieYear.text.toString().toIntOrNull()
             movie.director = movieDirector.text.toString()
             movie.description = movieDescription.text.toString()
             if (movie.title.isEmpty()) {
                 toast(R.string.enter_movie_title)
             } else {
-                if (movie.year < 1937 || movie.year > 2021) {
+                if (year != null) {
+                    if (year < 1937 || year > 2021) {
+                        toast(R.string.enter_movie_year)
+                    }
+                    else {
+                        movie.year = year;
+                    }
+                }
+                else {
                     toast(R.string.enter_movie_year)
                 }
                 if (movie.director.isEmpty()) {
@@ -72,15 +92,13 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
                 } else {
                     app.movies.create(movie.copy())
                 }
+                info("Add Button Pressed: $movieTitle")
+                setResult(AppCompatActivity.RESULT_OK)
+                finish()
+                toolbarAdd.title = title
+                setSupportActionBar(toolbarAdd)
+                }
             }
-            info("Add Button Pressed: $movieTitle")
-            setResult(AppCompatActivity.RESULT_OK)
-            finish()
-        }
-
-        toolbarAdd.title = title
-        setSupportActionBar(toolbarAdd)
-
         chooseImage.setOnClickListener {
             showImagePicker(this, IMAGE_REQUEST)
         }
@@ -117,7 +135,7 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
             }
             LOCATION_REQUEST -> {
                 if (data != null) {
-                    val location = data.extras?.getParcelable<Location>("Location")!!
+                    val location = data.extras?.getParcelable<Location>("location")!!
                     movie.lat = location.lat
                     movie.lng = location.lng
                     movie.zoom = location.zoom

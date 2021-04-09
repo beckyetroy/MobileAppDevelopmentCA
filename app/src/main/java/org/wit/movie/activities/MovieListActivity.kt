@@ -43,7 +43,7 @@ class MovieListActivity : AppCompatActivity(), MovieListener {
     }
 
     override fun onMovieClick(movie: MovieModel) {
-        startActivityForResult(intentFor<MovieActivity>().putExtra("movie edit", movie), 0)
+        startActivityForResult(intentFor<MovieActivity>().putExtra("movie_edit", movie), 0)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
