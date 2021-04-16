@@ -4,10 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.media.Rating
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.RatingBar
 import kotlinx.android.synthetic.main.activity_movie.*
 import kotlinx.android.synthetic.main.activity_movie_list.*
 import org.jetbrains.anko.AnkoLogger
@@ -43,11 +45,18 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
             movieYear.setText(movie.year.toString())
             movieDirector.setText(movie.director)
             movieDescription.setText(movie.description)
+            rBar.setOnRatingBarChangeListener(object : RatingBar.OnRatingBarChangeListener {
+                override fun onRatingChanged(p0: RatingBar?, p1: Float, p2: Boolean) {
+                    movie.rating = findViewById<RatingBar>(R.id.rBar).rating
+                }
+            })
+            findViewById<RatingBar>(R.id.rBar).setRating(movie.rating)
             movieImage.setImageBitmap(readImageFromPath(this, movie.image))
             if (movie.image != null) {
                 movieImage.setImageBitmap(readImageFromPath(this, movie.image))
                 chooseImage.setText(R.string.change_movie_image)
             }
+            movieLocation.setText(R.string.change_button_location)
             btnAdd.setText(R.string.save_movie)
         }
 
@@ -67,26 +76,28 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
 
         btnAdd.setOnClickListener() {
             movie.title = movieTitle.text.toString()
-            val year = movieYear.text.toString().toIntOrNull()
+            var year = movieYear.text.toString().toIntOrNull()
             movie.director = movieDirector.text.toString()
             movie.description = movieDescription.text.toString()
+            movie.rating = findViewById<RatingBar>(R.id.rBar).rating
             if (movie.title.isEmpty()) {
                 toast(R.string.enter_movie_title)
-            } else {
-                if (year != null) {
-                    if (year < 1937 || year > 2021) {
-                        toast(R.string.enter_movie_year)
-                    }
-                    else {
-                        movie.year = year;
-                    }
-                }
-                else {
+            }
+            if (year != null) {
+                if (year < 1937 || year > 2021) {
                     toast(R.string.enter_movie_year)
                 }
-                if (movie.director.isEmpty()) {
-                    toast(R.string.enter_movie_director)
+                else {
+                    movie.year = year;
                 }
+            }
+            if (year == null) {
+                toast(R.string.enter_movie_year)
+            }
+            if (movie.director.isEmpty()) {
+                toast(R.string.enter_movie_director)
+            }
+            else {
                 if (edit) {
                     app.movies.update(movie.copy())
                 } else {

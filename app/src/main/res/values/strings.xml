@@ -20,4 +20,6 @@
     <string name="location_info">This is a rough estimate of where the storyline is based. This step is optional.</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_g_maps">Map</string>
+    <string name="rate_movie_text">Rate this movie: </string>
+    <string name="change_button_location">Change Location</string>
 </resources>
