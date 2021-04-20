@@ -1,6 +1,7 @@
 package org.wit.movie.activities
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -9,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.RatingBar
 import kotlinx.android.synthetic.main.activity_movie.*
 import kotlinx.android.synthetic.main.activity_movie_list.*
@@ -37,6 +39,9 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie)
         app = application as MainApp
+
+        toolbarAdd.title = title
+        setSupportActionBar(toolbarAdd)
 
         if (intent.hasExtra("movie_edit")) {
             edit = true
@@ -106,8 +111,7 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
                 info("Add Button Pressed: $movieTitle")
                 setResult(AppCompatActivity.RESULT_OK)
                 finish()
-                toolbarAdd.title = title
-                setSupportActionBar(toolbarAdd)
+                toast("Movie saved")
                 }
             }
         chooseImage.setOnClickListener {
@@ -124,8 +128,20 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             R.id.item_delete -> {
-                app.movies.delete(movie)
-                finish()
+                val builder = AlertDialog.Builder(this@MovieActivity)
+                builder.setMessage(("Are you sure you want to delete this movie?"))
+                        .setCancelable(false)
+                        .setPositiveButton("Yes") { dialog, id ->
+                            // Delete item
+                            app.movies.delete(movie)
+                            finish()
+                        }
+                        .setNegativeButton("Cancel") { dialog, id ->
+                            // Dismiss the dialog
+                            dialog.dismiss()
+                        }
+                val alert = builder.create()
+                alert.show()
             }
             R.id.item_cancel -> {
                 finish()

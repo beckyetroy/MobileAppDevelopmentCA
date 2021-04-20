@@ -49,6 +49,7 @@ class MovieJSONStore : MovieStore, AnkoLogger {
             foundMovie.director = movie.director
             foundMovie.description = movie.description
             foundMovie.image = movie.image
+            foundMovie.rating = movie.rating
             foundMovie.lat = movie.lat
             foundMovie.lng = movie.lng
             foundMovie.zoom = movie.zoom

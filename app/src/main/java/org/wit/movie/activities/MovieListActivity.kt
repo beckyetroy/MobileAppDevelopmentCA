@@ -21,14 +21,14 @@ class MovieListActivity : AppCompatActivity(), MovieListener {
         setContentView(R.layout.activity_movie_list)
         app = application as MainApp
 
+        //enable action bar and set title
+        toolbar.title = title
+        setSupportActionBar(toolbar)
+
         //layout and populate for display
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
         loadMovies()
-
-        //enable action bar and set title
-        toolbar.title = title
-        setSupportActionBar(toolbar)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
