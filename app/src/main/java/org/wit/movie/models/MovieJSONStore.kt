@@ -12,7 +12,7 @@ import java.util.*
 
 val JSON_FILE = "movies.json"
 val gsonBuilder = GsonBuilder().setPrettyPrinting().create()
-val listType = object : TypeToken<java.util.ArrayList<MovieModel>>() {}.type
+val listType = object : TypeToken<ArrayList<MovieModel>>() {}.type
 
 fun generateRandomId(): Long {
     return Random().nextLong()
@@ -38,6 +38,10 @@ class MovieJSONStore : MovieStore, AnkoLogger {
         movie.id = generateRandomId()
         movies.add(movie)
         serialize()
+    }
+
+    override fun search(searchTerm: String): List<MovieModel> {
+        return movies.filter { movie -> movie.title.toLowerCase().contains(searchTerm.toLowerCase()) }
     }
 
     override fun update(movie: MovieModel) {

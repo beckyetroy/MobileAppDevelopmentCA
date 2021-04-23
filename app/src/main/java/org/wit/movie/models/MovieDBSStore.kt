@@ -69,6 +69,29 @@ class MovieDBStore(context: Context, name: String?, factory: SQLiteDatabase.Curs
         db.close()
     }
 
+    override fun search(searchTerm: String): List<MovieModel> {
+        val query = "SELECT * FROM $TABLE_MOVIES WHERE $COLUMN_TITLE.contains(\"$searchTerm\")"
+
+        val db = this.writableDatabase
+
+        val cursor = db.rawQuery(query, null)
+
+        var movies: List<MovieModel> = emptyList()
+
+        if (cursor.moveToFirst()) {
+            cursor.moveToFirst()
+
+            val id = Integer.parseInt(cursor.getString(0)).toLong()
+            val title = cursor.getString(1)
+            val description = cursor.getString(2)
+            movies.toMutableList().add(MovieModel(id, title = title, description = description))
+            cursor.close()
+        }
+
+        db.close()
+        return movies
+    }
+
     override fun update(movie: MovieModel) {
         val db = this.writableDatabase
         val values = ContentValues()

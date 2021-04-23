@@ -23,6 +23,10 @@ class MovieMemStore : MovieStore, AnkoLogger {
         logAll()
     }
 
+    override fun search(searchTerm: String): List<MovieModel> {
+        return movies.filter { movie -> movie.title.toLowerCase().contains(searchTerm.toLowerCase()) }
+    }
+
     override fun update(movie: MovieModel) {
         var foundMovie: MovieModel? = movies.find { m -> m.id == movie.id }
         if (foundMovie != null) {
