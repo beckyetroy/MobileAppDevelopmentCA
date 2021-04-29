@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.media.Rating
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -30,7 +31,7 @@ import java.io.IOException
 class MovieActivity : AppCompatActivity(), AnkoLogger {
 
     var movie = MovieModel()
-    lateinit var app : MainApp
+    lateinit var app: MainApp
     var edit = false
     val IMAGE_REQUEST = 1
     val LOCATION_REQUEST = 2
@@ -68,7 +69,7 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
         movieLocation.setOnClickListener {
             val location = Location(28.385233, -81.563873, -20f)
             if (movie.zoom != 0f) {
-                location.lat =  movie.lat
+                location.lat = movie.lat
                 location.lng = movie.lng
                 location.zoom = movie.zoom
             }
@@ -91,8 +92,7 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
             if (year != null) {
                 if (year < 1937 || year > 2021) {
                     toast(R.string.enter_movie_year)
-                }
-                else {
+                } else {
                     movie.year = year;
                 }
             }
@@ -101,8 +101,7 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
             }
             if (movie.director.isEmpty()) {
                 toast(R.string.enter_movie_director)
-            }
-            else {
+            } else {
                 if (edit) {
                     app.movies.update(movie.copy())
                 } else {
@@ -112,10 +111,15 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
                 setResult(AppCompatActivity.RESULT_OK)
                 finish()
                 toast("Movie saved")
-                }
             }
+        }
         chooseImage.setOnClickListener {
             showImagePicker(this, IMAGE_REQUEST)
+        }
+
+        IMDBBtn.setOnClickListener {
+            val imdb = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.imdb.com/find?q=" + movie.title))
+            startActivity(imdb)
         }
     }
 

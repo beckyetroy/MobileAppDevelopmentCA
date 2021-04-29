@@ -18,5 +18,11 @@
         <item name="android:background">@color/classic_navy</item>
         <item name="android:textColorPrimary">@color/gold</item>
     </style>
+    <style name="Theme.Movie.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.Movie.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.Movie.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

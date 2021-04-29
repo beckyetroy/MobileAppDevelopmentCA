@@ -16,7 +16,14 @@ class MovieDBStore(context: Context, name: String?, factory: SQLiteDatabase.Curs
                 TABLE_MOVIES + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY," +
                 COLUMN_TITLE
-                + " TEXT," + COLUMN_DESCRIPTION + " TEXT" + ")")
+                + " TEXT," + COLUMN_YEAR + " TEXT," +
+                COLUMN_DIRECTOR + " TEXT," +
+                COLUMN_DESCRIPTION + " TEXT," +
+                COLUMN_RATING + " TEXT," +
+                COLUMN_IMAGE + " TEXT," +
+                COLUMN_LAT + " TEXT," +
+                COLUMN_LNG + " TEXT," +
+                COLUMN_ZOOM + " TEXT," + ")")
         db.execSQL(CREATE_MOVIES_TABLE)
     }
 
@@ -33,7 +40,14 @@ class MovieDBStore(context: Context, name: String?, factory: SQLiteDatabase.Curs
 
         val COLUMN_ID = "_id"
         val COLUMN_TITLE = "title"
+        val COLUMN_YEAR = "year"
+        val COLUMN_DIRECTOR = "director"
         val COLUMN_DESCRIPTION = "description"
+        val COLUMN_RATING = "rating"
+        val COLUMN_IMAGE = "image"
+        val COLUMN_LAT = "lat"
+        val COLUMN_LNG = "lng"
+        val COLUMN_ZOOM = "zoom"
     }
 
     override fun findAll(): List<MovieModel> {
@@ -48,8 +62,17 @@ class MovieDBStore(context: Context, name: String?, factory: SQLiteDatabase.Curs
             while (!cursor.isAfterLast) {
                 val id = Integer.parseInt(cursor.getString(0)).toLong()
                 val title = cursor.getString(1)
-                val description = cursor.getString(2)
-                movies.add(MovieModel(id, title = title, description = description))
+                val year = cursor.getInt(2)
+                val director = cursor.getString(3)
+                val description = cursor.getString(4)
+                val rating = cursor.getFloat(5)
+                val image = cursor.getString(6)
+                val lat = cursor.getDouble(7)
+                val lng = cursor.getDouble(8)
+                val zoom = cursor.getFloat(9)
+                movies.add(MovieModel(id, title = title, year = year, director = director,
+                        description = description, rating = rating, image = image,
+                        lat = lat, lng = lng, zoom = zoom))
                 cursor.moveToNext()
             }
             cursor.close()
@@ -61,7 +84,14 @@ class MovieDBStore(context: Context, name: String?, factory: SQLiteDatabase.Curs
     override fun create(movie: MovieModel) {
         val values = ContentValues()
         values.put(COLUMN_TITLE, movie.title)
+        values.put(COLUMN_YEAR, movie.year)
+        values.put(COLUMN_DIRECTOR, movie.director)
         values.put(COLUMN_DESCRIPTION, movie.description)
+        values.put(COLUMN_RATING, movie.rating)
+        values.put(COLUMN_IMAGE, movie.image)
+        values.put(COLUMN_LAT, movie.lat)
+        values.put(COLUMN_LNG, movie.lng)
+        values.put(COLUMN_ZOOM, movie.zoom)
 
         val db = this.writableDatabase
 
@@ -83,8 +113,17 @@ class MovieDBStore(context: Context, name: String?, factory: SQLiteDatabase.Curs
 
             val id = Integer.parseInt(cursor.getString(0)).toLong()
             val title = cursor.getString(1)
-            val description = cursor.getString(2)
-            movies.toMutableList().add(MovieModel(id, title = title, description = description))
+            val year = cursor.getInt(2)
+            val director = cursor.getString(3)
+            val description = cursor.getString(4)
+            val rating = cursor.getFloat(5)
+            val image = cursor.getString(6)
+            val lat = cursor.getDouble(7)
+            val lng = cursor.getDouble(8)
+            val zoom = cursor.getFloat(9)
+            movies.toMutableList().add(MovieModel(id, title = title, year = year, director = director,
+                    description = description, rating = rating, image = image,
+                    lat = lat, lng = lng, zoom = zoom))
             cursor.close()
         }
 
@@ -96,7 +135,14 @@ class MovieDBStore(context: Context, name: String?, factory: SQLiteDatabase.Curs
         val db = this.writableDatabase
         val values = ContentValues()
         values.put(COLUMN_TITLE, movie.title)
+        values.put(COLUMN_YEAR, movie.year)
+        values.put(COLUMN_DIRECTOR, movie.director)
         values.put(COLUMN_DESCRIPTION, movie.description)
+        values.put(COLUMN_RATING, movie.rating)
+        values.put(COLUMN_IMAGE, movie.image)
+        values.put(COLUMN_LAT, movie.lat)
+        values.put(COLUMN_LNG, movie.lng)
+        values.put(COLUMN_ZOOM, movie.zoom)
 
 
         db.update(TABLE_MOVIES, values, COLUMN_ID + " = ?", null)
