@@ -17,7 +17,13 @@
     <style name="MyToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:background">@color/classic_navy</item>
         <item name="android:textColorPrimary">@color/gold</item>
+        <item name ="android:fontFamily">@font/waltograph</item>
     </style>
+
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">40sp</item>
+    </style>
+
     <style name="Theme.Movie.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

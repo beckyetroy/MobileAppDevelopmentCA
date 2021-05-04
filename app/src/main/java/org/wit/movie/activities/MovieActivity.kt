@@ -5,11 +5,13 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.RatingBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import com.google.firebase.storage.ktx.storageMetadata
 import kotlinx.android.synthetic.main.activity_movie.*
 import kotlinx.android.synthetic.main.activity_movie_list.*
 import org.jetbrains.anko.AnkoLogger
@@ -23,6 +25,7 @@ import org.wit.movie.helpers.showImagePicker
 import org.wit.movie.main.MainApp
 import org.wit.movie.models.Location
 import org.wit.movie.models.MovieModel
+import java.io.File
 
 
 class MovieActivity : AppCompatActivity(), AnkoLogger {
@@ -38,12 +41,15 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
         setContentView(R.layout.activity_movie)
         app = application as MainApp
 
-        toolbarAdd.title = title
+        //enable action bar and set title
+        toolbarAdd.title = "Add Movie"
         setSupportActionBar(toolbarAdd)
 
         if (intent.hasExtra("movie_edit")) {
             edit = true
             movie = intent.extras?.getParcelable<MovieModel>("movie_edit")!!
+            //set the title of the toolbar to the movie title
+            toolbarAdd.title = movie.title
             //populate the fields
             movieTitle.setText(movie.title)
             movieYear.setText(movie.year.toString())
@@ -68,7 +74,6 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
             btnAdd.setText(R.string.save_movie)
             //display the IMDB button
             IMDBBtn.isVisible = true;
-            EmailBtn.isVisible = true;
         }
 
         movieLocation.setOnClickListener {
@@ -82,8 +87,8 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
             }
             //start Google Maps API
             startActivityForResult(
-                intentFor<GMapsActivity>().putExtra("location", location),
-                LOCATION_REQUEST
+                    intentFor<GMapsActivity>().putExtra("location", location),
+                    LOCATION_REQUEST
             )
         }
 
@@ -95,23 +100,21 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
         btnAdd.setOnClickListener() {
             //parse the fields and assign them to their relevant values
             movie.title = movieTitle.text.toString()
-            var year = movieYear.text.toString().toIntOrNull()
+            var year = movieYear.text.toString().toInt()
             movie.director = movieDirector.text.toString()
             movie.description = movieDescription.text.toString()
             movie.rating = findViewById<RatingBar>(R.id.rBar).rating
+            movie.year = year
             //validation
             if (movie.title.isEmpty()) {
                 //title cannot be null - display error message
                 toast(R.string.enter_movie_title)
             }
-            if (year != null) {
-                //year must be between 1937 and 2021 (any other is impossible for a Disney movie)
-                if (year < 1937 || year > 2021) {
-                    toast(R.string.enter_movie_year)
-                } else {
-                    movie.year = year;
-                }
-            } else {
+            //year must be between 1937 and 2021 (any other is impossible for a Disney movie)
+            if (year < 1937 || year > 2021) {
+                toast(R.string.enter_movie_year)
+            }
+            else {
                 if (edit) {
                     //update the stored values
                     app.movies.update(movie.copy())
@@ -144,6 +147,7 @@ class MovieActivity : AppCompatActivity(), AnkoLogger {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        //display menu
         menuInflater.inflate(R.menu.menu_movie, menu)
         //if the movie is in edit mode, display the delete and email buttons
         if (edit && menu != null) menu.getItem(0).setVisible(true)

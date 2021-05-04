@@ -23,7 +23,8 @@
                 android:id="@+id/toolbarAdd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:theme="@style/MyToolbar">
+                app:theme="@style/MyToolbar"
+                app:titleTextAppearance="@style/Toolbar.TitleText">
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -177,20 +178,6 @@
 
                 <Button
                     android:id="@+id/IMDBBtn"
-                    android:visibility="invisible"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:stateListAnimator="@null"
-                    android:text="@string/button_IMDB"
-                    android:background="@color/classic_navy"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
-
-                <Button
-                    android:id="@+id/EmailBtn"
                     android:visibility="invisible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

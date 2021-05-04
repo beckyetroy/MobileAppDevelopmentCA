@@ -29,11 +29,14 @@ class MovieAdapter constructor(private var movies: List<MovieModel>,
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val charSearch = constraint.toString()
                 if (charSearch.isEmpty()) {
+                    //display all movies with no conditions
                     for (i in movies.indices) {
                         movieFilterList.add(movies[i])
                     }
                 } else {
                     val resultList = ArrayList<MovieModel>()
+                    /*case sensitive - if movie title matches query searched add it to the
+                     resultlist*/
                     for (row in movies) {
                         if (row.title.toLowerCase(Locale.ROOT)
                                         .contains(charSearch.toLowerCase(Locale.ROOT))
@@ -50,6 +53,7 @@ class MovieAdapter constructor(private var movies: List<MovieModel>,
 
             @Suppress("UNCHECKED_CAST")
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                //display movieFilterList
                 movieFilterList = results?.values as ArrayList<MovieModel>
                 notifyDataSetChanged()
             }
@@ -58,6 +62,7 @@ class MovieAdapter constructor(private var movies: List<MovieModel>,
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
+        //Display movies as cards
         return MainHolder(LayoutInflater.from(parent?.context).inflate(R.layout.card_movie, parent, false))
     }
 
@@ -71,9 +76,11 @@ class MovieAdapter constructor(private var movies: List<MovieModel>,
     class MainHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(movie: MovieModel, listener : MovieListener) {
+            //populates the movie cards with title, description, and image
             itemView.movieTitle.text = movie.title
             itemView.description.text = movie.description
             itemView.imageIcon.setImageBitmap(readImageFromPath(itemView.context, movie.image))
+            //start method onMovieClick for that particular movie
             itemView.setOnClickListener { listener.onMovieClick(movie) }
         }
     }

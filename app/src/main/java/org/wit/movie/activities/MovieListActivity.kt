@@ -39,6 +39,7 @@ class MovieListActivity : AppCompatActivity(), MovieListener {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (newText != null) {
+                    //show the movies found using the search function (see MovieAdapter)
                     showMovies(app.movies.search(newText))
                 }
                 else {
@@ -50,18 +51,21 @@ class MovieListActivity : AppCompatActivity(), MovieListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        //display menu
         menuInflater.inflate(R.menu.menu_main, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            //start MovieActivity
             R.id.item_add -> startActivityForResult<MovieActivity>(0)
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun onMovieClick(movie: MovieModel) {
+        //start MovieActivity with additional instructions
         startActivityForResult(intentFor<MovieActivity>().putExtra("movie_edit", movie), 0)
     }
 
@@ -71,10 +75,12 @@ class MovieListActivity : AppCompatActivity(), MovieListener {
     }
 
     private fun loadMovies() {
+        //call all movies stored
         showMovies(app.movies.findAll())
     }
 
     fun showMovies(movies: List<MovieModel>) {
+        //display all movies stored
         recyclerView.adapter = MovieAdapter(movies, this)
         recyclerView.adapter?.notifyDataSetChanged()
     }
